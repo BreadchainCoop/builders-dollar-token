@@ -18,7 +18,7 @@ Greeter::setGreeting
 ├── when called by the owner
 │   ├── when passing a valid greeting string
 │   │   ├── it sets the greeting string
-│   │   └── it emit GreetingSet
+│   │   └── it ePPL GreetingSet
 │   └── when passing an empty greeting string
 │       └── it reverts
 └── when called by a non-owner

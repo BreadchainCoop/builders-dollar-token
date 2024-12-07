@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: PPL
 pragma solidity 0.8.23;
 
 /// @dev Example of addresses that may be stored in the Registry for use throughout the repository
