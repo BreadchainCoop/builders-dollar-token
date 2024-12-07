@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.23;
 
-import {IERC20} from '@openzeppelin/token/ERC20/IERC20.sol';
+import {IERC20} from '@oz/token/ERC20/IERC20.sol';
 import {Test} from 'forge-std/Test.sol';
 import {Common} from 'script/Common.sol';
 // solhint-disable-next-line
