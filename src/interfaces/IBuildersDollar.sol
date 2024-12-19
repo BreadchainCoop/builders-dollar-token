@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.23;
 
+import {IPool} from './IPool.sol';
+import {IRewardsController} from './IRewardsController.sol';
 import {IERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
 /**
@@ -53,12 +55,20 @@ interface IBuildersDollar {
                             ERRORS
     //////////////////////////////////////////////////////////////*/
 
-  /// @notice Throws when the yield is zero
-  error YieldZero();
-  /// @notice Throws when the yield is less that the amount requested to claim
-  error YieldInsufficient();
   /// @notice Throws when the value is zero
   error ZeroValue();
+  /// @notice Throws when the amount of minted tokens is wrong
+  error WrongMintingValue();
+  /// @notice Throws when the amount of burned tokens is wrong
+  error WrongBurningValue();
+  /// @notice Throws when the amount of yield is wrong
+  error WrongClaimValue();
+  /// @notice Throws when the yield is less that the amount requested to claim
+  error YieldInsufficient();
+  /// @notice Throws when the internal claimRewards function failed to run
+  error ClaimRewardsFailed();
+  /// @notice Throws when the collateral tried to be saved
+  error UCantTouchThis();
 
   /*///////////////////////////////////////////////////////////////
                             LOGIC
@@ -69,6 +79,12 @@ interface IBuildersDollar {
    * @param _symbol The symbol of the token
    */
   function initialize(string memory _name, string memory _symbol) external;
+
+  /**
+   * @notice Set the yield claimer
+   * @param _yieldClaimer The Address of the yield claimer
+   */
+  function setYieldClaimer(address _yieldClaimer) external;
 
   /**
    * @notice Mint the base token
@@ -92,11 +108,6 @@ interface IBuildersDollar {
   function claimYield(uint256 _amount) external;
 
   /**
-   * @notice Claim rewards
-   */
-  function claimRewards() external;
-
-  /**
    * @notice Rescue tokens
    * @dev Access Control: onlyOwner
    * @param _token The address of the token to be rescued
@@ -109,7 +120,7 @@ interface IBuildersDollar {
     //////////////////////////////////////////////////////////////*/
   /**
    * @notice Get the base Token
-   * @dev This variable functionally-immutable and set during intialization
+   * @dev This variable is immutable and set during intialization
    * @return _baseToken The base Token
    */
   // solhint-disable-next-line func-name-mixedcase
@@ -117,19 +128,34 @@ interface IBuildersDollar {
 
   /**
    * @notice Get the interest bearing token
-   * @dev This variable functionally-immutable and set during intialization
+   * @dev This variable is immutable and set during intialization
    * @return _interestBearingToken The interest bearing token
    */
   // solhint-disable-next-line func-name-mixedcase
   function INTEREST_BEARING_TOKEN() external view returns (IERC20 _interestBearingToken);
 
   /**
-   * @notice Get the address of the payment distibutor
-   * @dev This variable functionally-immutable and set during intialization
-   * @return _paymentDistributor The address of the payment distributor (probably a pool address).
+   * @notice Get the pool interface of the payment distibutor
+   * @dev This variable is immutable and set during intialization
+   * @return _paymentDistributor The pool interface of the payment distributor (probably a pool address).
    */
   // solhint-disable-next-line func-name-mixedcase
-  function PAYMENT_DISTRIBUTOR() external view returns (address _paymentDistributor);
+  function PAYMENT_DISTRIBUTOR() external view returns (IPool _paymentDistributor);
+
+  /**
+   * @notice Set the rewards interface
+   * @dev This variable is immutable and set during intialization
+   * @return _rewards The rewards interface.
+   */
+  // solhint-disable-next-line func-name-mixedcase
+  function REWARDS() external view returns (IRewardsController _rewards);
+
+  /**
+   * @notice Get the address of the yield claimer
+   * @return _yieldClaimer The address of the yield claimer
+   */
+  // solhint-disable-next-line func-name-mixedcase
+  function YIELD_CLAIMER() external view returns (address _yieldClaimer);
 
   /**
    * @notice Check the amount of yield accrued
