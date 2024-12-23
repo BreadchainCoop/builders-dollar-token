@@ -3,8 +3,8 @@ pragma solidity ^0.8.20;
 
 /**
  * @title RewardsController
- * @author ?
- * @notice claims rewards
+ * @author @Astodialo
+ * @notice claims rewards from the rewards controller, reference here https://github.com/aave/aave-v3-periphery/blob/master/contracts/rewards/interfaces/IRewardsController.sol
  */
 interface IRewardsController {
   /*///////////////////////////////////////////////////////////////
